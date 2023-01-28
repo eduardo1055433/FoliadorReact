@@ -18,9 +18,7 @@ const Layout = () => {
     <div className="wrapper">
       <Header />
       <Aside usuario={name} />
-      <div className="content-wrapper">
         <Outlet />
-      </div>
       <Footer />
 
     </div>

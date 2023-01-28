@@ -11,9 +11,13 @@ import Unauthorized from './Pages/Unauthorized';
 import Auth from './util/Auth';
 import Foliador from './Pages/Foliador/foliador';
 import NotFound from './Pages/404';
+import UserCard from './util/LoadBar';
+
 function App() {
   return (
     <Routes>
+      <Route path='/load' element={<UserCard />} />
+
       <Route path='/register' element={<Register />} />
       <Route path='/signin' element={<Signin />} />
       <Route path='/*' element={<NotFound />} />

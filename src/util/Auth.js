@@ -10,13 +10,14 @@ const Auth = ({ allowedRoles }) => {
     const location = useLocation();
     let rol = '';
     let usuario = '';
-
     const userToken = sessionStorage.getItem('user-token');
+
     if(userToken !== null){
-      var decoded = jwt(userToken);
-      //console.log(decoded.user.rol +"  <-->  "+decoded.user.nombre);
-      rol = decoded.user.rol;
-      usuario = decoded.user.nombre;
+      if(userToken !== ''){
+        var decoded = jwt(userToken);
+        rol = decoded.user.rol;
+        usuario = decoded.user.nombre;
+      }
     }    
 
      

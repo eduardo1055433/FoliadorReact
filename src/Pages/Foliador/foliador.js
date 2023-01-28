@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Obtener_Token, Obtener_Ruta } from '../../util/Info_token';
 import { useNavigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const FileDownload = require("js-file-download");
+
+
 
 const url = "http://127.0.0.1:5000";
 
@@ -23,6 +27,16 @@ const Foliador = () => {
   const [get_token, setToken] = useState(null);
   const [get_ruta, setRuta] = useState(null);
   const [list_files, setFiles] = useState([]);
+  const [change_img, setImg] = useState('');
+   
+
+    const toastId = React.useRef(null);
+
+    const notify = () => toastId.current = toast("Lorem ipsum dolor");
+  
+    const dismiss = () =>  toast.dismiss(toastId.current);
+  
+    const dismissAll = () =>  toast.dismiss();
 
 
   function descargarArchivo() {
@@ -86,7 +100,7 @@ const Foliador = () => {
     formData.append("file", selectedFile);
     formData.append("carpeta", Ruta);
 
-
+    toastId.current = toast("Espere Por favor.....");
     try {
       const response = axios({
         url: url + "/file",
@@ -96,10 +110,22 @@ const Foliador = () => {
           "Content-Type": "multipart/form-data",
         },
       }).then(function (response) {
+        toast.dismiss(toastId.current);
         console.log(response.data);
         setFiles([...list_files, { type: response.data }]);
         //setIsVisible(current => !current);
         //style={{ visibility: isVisible ? 'visible' : 'hidden' }} para ocultar cosas
+        toastId.current = toast.success('🦄 Archivo subido Correctamente !!!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+
       });
     } catch (error) {
       console.log(error);
@@ -174,101 +200,319 @@ const Foliador = () => {
 
 
   return (
-    <div className="App">{/*className="content-wrapper"*/}
-      <h1>SELECCIONE UN ARCHIVO </h1>
-      <form onSubmit={SubirArchivo} >
-        <input type="file" onChange={SeleccionarArchivo} accept="application/pdf" />
-        <input type="submit" value="Subir Pdf" />
-      </form>
-      <ol>
-        {list_files.map((pdf_files) => (
-          <li key={pdf_files.type}>{pdf_files.type}</li>
-        ))}
-      </ol>
-      <form onSubmit={handleSubmit}  >
-        <div >
-          <label>LINEA 1 :</label>
-          <RadioInput label="sólo números" value="a" checked={num_opc} setter={setnum_opc} />
-          <RadioInput label="número y palabras" value="b" checked={num_opc} setter={setnum_opc} />
-          <RadioInput label="palabra y número" value="c" checked={num_opc} setter={setnum_opc} />
-          <RadioInput label="sólo palabras" value="d" checked={num_opc} setter={setnum_opc} />
+    <div className="content-wrapper">
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row  ">
+            <div class="col-md-6" >
+              <h1>SELECCIONE UN ARCHIVO &nbsp;</h1>
+              <form onSubmit={SubirArchivo} >
+                <input type="file" onChange={SeleccionarArchivo} accept="application/pdf" />&nbsp;&nbsp;&nbsp;
+                <input type="submit" value="Subir Pdf" />
+              </form>
+              <hr ></hr>              
+            </div>
+            <div class="col-md-6" >
+              <br></br>
+              <ol>
+                {list_files.map((pdf_files) => (
+                  <li key={pdf_files.type}>{pdf_files.type}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
 
+
+      <div className="content" >
+        <div className="container-fluid">
+          <form onSubmit={handleSubmit}  >
+            <div className="row">
+              <div className="col-md-6">
+                <div className="card card-primary"   >
+                  <div className="card-header">
+                    <h3 className="card-title">Contenido en la hoja </h3>
+                  </div>
+                  <div className="card-body">
+
+                    <div className="row">
+                      <div className="col-6">
+                        <div class="form-group" >
+                          <div class="row"><label>Linea 1 :</label></div>
+                          <div class="row"><RadioInput label="sólo números" radion="radioPrimary11" value="a" checked={num_opc} setter={setnum_opc} /></div>
+                          <div class="row"><RadioInput label="número y palabras" radion="radioPrimary12" value="b" checked={num_opc} setter={setnum_opc} /></div>
+                          <div class="row"><RadioInput label="palabra y número" radion="radioPrimary13" value="c" checked={num_opc} setter={setnum_opc} /></div>
+                          <div class="row"><RadioInput label="sólo palabras" radion="radioPrimary14" value="d" checked={num_opc} setter={setnum_opc} /></div>
+
+                        </div>
+                      </div>
+                      <div className="col-6">
+                        <div class="form-group" >
+                          <div class="row"><label>Linea 2 :</label></div>
+                          <div class="row"><RadioInput label="sólo números" radion="radioPrimary15" value="a" checked={num_opc2} setter={setnum_opc2} /></div>
+                          <div class="row"><RadioInput label="número y palabras" radion="radioPrimary16" value="b" checked={num_opc2} setter={setnum_opc2} /></div>
+                          <div class="row"><RadioInput label="palabra y número" radion="radioPrimary17" value="c" checked={num_opc2} setter={setnum_opc2} /></div>
+                          <div class="row"><RadioInput label="sólo palabras" radion="radioPrimary18" value="d" checked={num_opc2} setter={setnum_opc2} /></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card card-primary">
+                  <div className="card-header">
+                    <h3 className="card-title">Posicion en el Papel </h3>
+                  </div>
+                  <div className="card-body">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group" >
+                          <div class="container">
+                            <div class="row border">
+                              <div class="col-md border"><RadioInput label="Arriba izquierda" radion="radioPrimary21" value="1" checked={position} setter={setposition} /></div>
+                              <div class="col-md border"><RadioInput label="Arriba centro" radion="radioPrimary22" value="2" checked={position} setter={setposition} /></div>
+                              <div class="col-md border"><RadioInput label="Arriba derecha" radion="radioPrimary23" value="3" checked={position} setter={setposition} /></div>
+                            </div>
+                            <div class="row border">
+                              <div class="col-md ">&nbsp;</div>
+                            </div>
+                            <div class="row border">
+                              <div class="col-md border"><RadioInput label="Abajo izquierda" radion="radioPrimary24" value="4" checked={position} setter={setposition} /></div>
+                              <div class="col-md border"><RadioInput label="Abajo centro" radion="radioPrimary25" value="5" checked={position} setter={setposition} /></div>
+                              <div class="col-md border"><RadioInput label="Abajo derecha" radion="radioPrimary26" value="6" checked={position} setter={setposition} /></div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div>&nbsp;</div>
+                        <div>&nbsp;</div>
+                        <div>&nbsp;</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="card card-success">
+                  <div className="card-header">
+                    <h3 className="card-title">Opciones de Fuente de Impresión</h3>
+                  </div>
+                  <div className="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group" >
+                          <div class="row"><label>Mayúsculas / minúsculas :</label></div>
+                          <div class="row"><RadioInput label="Sólo la primera" radion="radioPrimary19" value="1" checked={caps} setter={setcaps} /></div>
+                          <div class="row"><RadioInput label="TODAS MAYÚSCULAS" radion="radioPrimary20" value="2" checked={caps} setter={setcaps} /></div>
+
+
+                          <div class="row"><label>TAMAÑO DE LETRA :  </label></div>
+                          <div class="row"><input class="form-control  " type="number" value={font_size} onChange={e => setfont_size(e.target.value)} ></input></div>
+
+                        </div>
+
+                      </div>
+                      <div class="col-6">
+                        <div class="form-group" >
+                          <div class="row"><label>Tipo de Letra : </label></div>
+                          <div class="row"><RadioInput label="Courier" value="a" checked={font_name} setter={setfont_name} /></div>
+                          <div class="row"><RadioInput label="Courier-Bold" value="b" checked={font_name} setter={setfont_name} /></div>
+                          <div class="row"><RadioInput label="Courier-BoldOblique" value="c" checked={font_name} setter={setfont_name} /></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card card-success">
+                  <div className="card-header">
+                    <h3 className="card-title">Posicion y Limites de Numeracion</h3>
+                  </div>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-6">
+
+                        <div class="form-group" >
+                          <label>NUMERO INICIAL :</label>
+                          <input class="form-control" type="number" value={num_ini_x} onChange={e => setnum_ini_x(e.target.value)}></input>
+                        </div>
+                        <div class="form-group" >
+                          <label>NUMERO DESDE LA PAGINA :</label>
+                          <input class="form-control" type="number" value={num_from_x} onChange={e => setnum_from_x(e.target.value)}></input>
+                        </div>
+
+                      </div>
+                      <div className="col-6">
+
+                        <div class="form-group" >
+                          <label>MARGEN DERECHO :</label>
+                          <input class="form-control" type="number" value={left_margin} onChange={e => setleft_margin(e.target.value)}></input>
+                        </div>
+                        <div class="form-group" >
+                          <label>MARGEN IZQUIERDO :</label>
+                          <input class="form-control" type="number" value={right_margin} onChange={e => setright_margin(e.target.value)}></input>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+            <section class="content-header">
+              <div class="container-fluid">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Enviar Configuración</button>
+                <button style={{ visibility: isVisibleDow ? 'visible' : 'hidden' }} onClick={(e) => descargarArchivo(e.target.value)} class="btn btn-primary btn-lg btn-block" >DESCARGAR PDF</button>
+              </div>
+            </section>
+          </form>
         </div>
-        <div>
-          <label>LINEA 2 :</label>
-          <RadioInput label="sólo números" value="a" checked={num_opc2} setter={setnum_opc2} />
-          <RadioInput label="número y palabras" value="b" checked={num_opc2} setter={setnum_opc2} />
-          <RadioInput label="palabra y número" value="c" checked={num_opc2} setter={setnum_opc2} />
-          <RadioInput label="sólo palabras" value="d" checked={num_opc2} setter={setnum_opc2} />
-        </div>
-        <div>
-          <label>TIPO DE LETRA :</label>
-          <RadioInput label="Courier" value="a" checked={font_name} setter={setfont_name} />
-          <RadioInput label="Courier-Bold" value="b" checked={font_name} setter={setfont_name} />
-          <RadioInput label="Courier-BoldOblique" value="c" checked={font_name} setter={setfont_name} />
-        </div>
-        <div>
-          <label>TAMAÑO DE LETRA :</label>
-          <input type="number" value={font_size} onChange={e => setfont_size(e.target.value)} ></input>
-        </div>
-        <div>
-          <label>MARGEN DERECHO :</label>
-          <input type="number" value={left_margin} onChange={e => setleft_margin(e.target.value)}></input>
-        </div>
-        <div>
-          <label>MARGEN IZQUIERDO :</label>
-          <input type="number" value={right_margin} onChange={e => setright_margin(e.target.value)}></input>
-        </div>
-        <div>
-          <label>Mayúsculas / minúsculas :</label>
-          <RadioInput label="Sólo la primera" value="1" checked={caps} setter={setcaps} />
-          <RadioInput label="TODAS MAYÚSCULAS" value="2" checked={caps} setter={setcaps} />
-        </div>
-        <div>
-          <label>Posición de la numeración :</label>
-          <RadioInput label="arriba izquierda" value="1" checked={position} setter={setposition} />
-          <RadioInput label="arriba centro" value="2" checked={position} setter={setposition} />
-          <RadioInput label="arriba derecha" value="3" checked={position} setter={setposition} />
-          <RadioInput label="abajo izquierda" value="4" checked={position} setter={setposition} />
-          <RadioInput label="abajo centro" value="5" checked={position} setter={setposition} />
-          <RadioInput label="abajo derecha" value="6" checked={position} setter={setposition} />
-        </div>
-        <div>
-          <label>NUMERO INICIAL :</label>
-          <input type="number" value={num_ini_x} onChange={e => setnum_ini_x(e.target.value)}></input>
-        </div>
-        <div>
-          <label>NUMERO DESDE LA PAGINA :</label>
-          <input type="number" value={num_from_x} onChange={e => setnum_from_x(e.target.value)}></input>
-        </div>
-        <button type="submit"   >ENVIAR CONFIGURACION</button>
-      </form>
-      <button style={{ visibility: isVisibleDow ? 'visible' : 'hidden' }} onClick={(e) => descargarArchivo(e.target.value)}>
-        DESCARGAR PDF
-      </button>
+      </div >
+      <div>
+      <ToastContainer 
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light" >  
+        </ToastContainer>
     </div>
+    </div>
+
+    
   );
 };
 
 export default Foliador;
 
-const RadioInput = ({ label, value, checked, setter }) => {
+const RadioInput = ({ label, value, checked, setter, radion }) => {
   return (
-    <label>
-      <input type="radio" checked={checked == value} onChange={() => setter(value)} />
-      <span>{label}</span>
-    </label>
+    <div class="icheck-primary d-inline">
+      <input type="radio" id={radion} checked={checked == value} onChange={() => setter(value)} />
+      <label for={radion}>{label}</label>
+    </div>
   );
 };
 /*
-      <button onClick={(e) => descargarArchivo(e.target.value)}>
-        DESCARGAR PDF
-      </button>
-      <button onClick={(e) => LimpiarCarpeta(e.target.value)}>
-        Limpiar Carpeta
-      </button>
-      <form onSubmit={SubirArchivo} >
-        <input type="file" onChange={SeleccionarArchivo} />
-        <input type="submit" value="Upload File" />
-      </form>
+
+<div className="content-wrapper">
+<div class="content">
+<div class="container-fluid">
+
+
+
+  <h1>NUMERADOR SISPLANI</h1>
+  <form onSubmit={SubirArchivo} >
+    <input type="file" onChange={SeleccionarArchivo} accept="application/pdf" />
+    <input type="submit" value="Subir Pdf" />
+  </form>
+  <ol>
+    {list_files.map((pdf_files) => (
+      <li key={pdf_files.type}>{pdf_files.type}</li>
+    ))}
+  </ol>
+  <form onSubmit={handleSubmit}  >
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group clearfix" >
+            <div class="row"><label>Linea 1 :</label></div>
+            <div class="row"><RadioInput label="sólo números" radion="radioPrimary11" value="a" checked={num_opc} setter={setnum_opc} /></div>
+            <div class="row"><RadioInput label="número y palabras" radion="radioPrimary12" value="b" checked={num_opc} setter={setnum_opc} /></div>
+            <div class="row"><RadioInput label="palabra y número" radion="radioPrimary13" value="c" checked={num_opc} setter={setnum_opc} /></div>
+            <div class="row"><RadioInput label="sólo palabras" radion="radioPrimary14" value="d" checked={num_opc} setter={setnum_opc} /></div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group clearfix" >
+            <div class="row"><label>Linea 2 :</label></div>
+            <div class="row"><RadioInput label="sólo números" radion="radioPrimary15" value="a" checked={num_opc2} setter={setnum_opc2} /></div>
+            <div class="row"><RadioInput label="número y palabras" radion="radioPrimary16" value="b" checked={num_opc2} setter={setnum_opc2} /></div>
+            <div class="row"><RadioInput label="palabra y número" radion="radioPrimary17" value="c" checked={num_opc2} setter={setnum_opc2} /></div>
+            <div class="row"><RadioInput label="sólo palabras" radion="radioPrimary18" value="d" checked={num_opc2} setter={setnum_opc2} /></div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group clearfix" >
+            <div class="row"><label>Mayúsculas / minúsculas :</label></div>
+            <div class="row"><RadioInput label="Sólo la primera" radion="radioPrimary19" value="1" checked={caps} setter={setcaps} /></div>
+            <div class="row"><RadioInput label="TODAS MAYÚSCULAS" radion="radioPrimary20" value="2" checked={caps} setter={setcaps} /></div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group clearfix" >
+            <label>Posición de la numeración :</label>
+            <RadioInput label="arriba izquierda" radion="radioPrimary21" value="1" checked={position} setter={setposition} />
+            <RadioInput label="arriba centro" radion="radioPrimary22" value="2" checked={position} setter={setposition} />
+            <RadioInput label="arriba derecha" radion="radioPrimary23" value="3" checked={position} setter={setposition} />
+            <RadioInput label="abajo izquierda" radion="radioPrimary24" value="4" checked={position} setter={setposition} />
+            <RadioInput label="abajo centro" radion="radioPrimary25" value="5" checked={position} setter={setposition} />
+            <RadioInput label="abajo derecha" radion="radioPrimary26" value="6" checked={position} setter={setposition} />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+
+      </div>
+    </div>
+    <div>
+
+    </div>
+    <div>
+      <label>TIPO DE LETRA :</label>
+      <RadioInput label="Courier" value="a" checked={font_name} setter={setfont_name} />
+      <RadioInput label="Courier-Bold" value="b" checked={font_name} setter={setfont_name} />
+      <RadioInput label="Courier-BoldOblique" value="c" checked={font_name} setter={setfont_name} />
+    </div>
+    <div>
+      <label>TAMAÑO DE LETRA :</label>
+      <input type="number" value={font_size} onChange={e => setfont_size(e.target.value)} ></input>
+    </div>
+    <div>
+      <label>MARGEN DERECHO :</label>
+      <input type="number" value={left_margin} onChange={e => setleft_margin(e.target.value)}></input>
+    </div>
+    <div>
+      <label>MARGEN IZQUIERDO :</label>
+      <input type="number" value={right_margin} onChange={e => setright_margin(e.target.value)}></input>
+    </div>
+    <div>
+      
+    </div>
+    <div>
+      
+    </div>
+    <div>
+      <label>NUMERO INICIAL :</label>
+      <input type="number" value={num_ini_x} onChange={e => setnum_ini_x(e.target.value)}></input>
+    </div>
+    <div>
+      <label>NUMERO DESDE LA PAGINA :</label>
+      <input type="number" value={num_from_x} onChange={e => setnum_from_x(e.target.value)}></input>
+    </div>
+    <button type="submit"   >ENVIAR CONFIGURACION</button>
+  </form>
+  <button style={{ visibility: isVisibleDow ? 'visible' : 'hidden' }} onClick={(e) => descargarArchivo(e.target.value)}>
+    DESCARGAR PDF
+  </button>
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+
+</div>
 */
